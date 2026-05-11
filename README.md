@@ -32,13 +32,12 @@
 
 ## 🚀 在线体验
 
-如果仓库开启了 GitHub Pages，可直接访问：
-**`https://<你的用户名>.github.io/<仓库名>/`**
+**Live Demo**：<https://jimmylaowang.github.io/texas-holdem-ios-demo/>
 
 或本地体验：
 ```bash
-git clone https://github.com/<你的用户名>/<仓库名>.git
-cd <仓库名>
+git clone https://github.com/jimmyLaoWANG/texas-holdem-ios-demo.git
+cd texas-holdem-ios-demo
 # 双击 index.html，或：
 python3 -m http.server 8000
 # 浏览器打开 http://localhost:8000
