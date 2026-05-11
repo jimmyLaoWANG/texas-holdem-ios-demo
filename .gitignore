@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# WorkBuddy 本地记忆（个人工作上下文，不入库）
+.workbuddy/
+
+# IDE / 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志/临时
+*.log
+*.tmp
+.cache/
+
+# Node（如未来加构建工具）
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
