@@ -524,86 +524,250 @@
   }
 
   /* ===========================
-     LOBBY (gamified)
+     LOBBY (premium casino, v4)
      =========================== */
   #lobbyPage { padding: 0; }
   .lobby-stage {
     position: relative;
     flex: 1;
     overflow: hidden;
+    background:
+      radial-gradient(120% 72% at 50% -10%, rgba(255,200,80,0.18) 0%, rgba(255,150,40,0.05) 22%, rgba(0,0,0,0) 48%),
+      radial-gradient(100% 80% at 50% 50%, #1a1124 0%, #120a1c 40%, #0a0a14 100%);
+  }
+  /* Ambient noise grain */
+  .lobby-stage::before {
+    content: ""; position: absolute; inset: 0;
+    pointer-events: none; z-index: 1;
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(255,255,255,0.025) 0 1px, transparent 2px),
+      radial-gradient(circle at 78% 32%, rgba(255,255,255,0.02) 0 1px, transparent 2px),
+      radial-gradient(circle at 42% 82%, rgba(255,255,255,0.02) 0 1px, transparent 2px),
+      radial-gradient(circle at 88% 72%, rgba(255,255,255,0.018) 0 1px, transparent 2px),
+      radial-gradient(circle at 22% 68%, rgba(255,255,255,0.018) 0 1px, transparent 2px);
+    background-size: 3px 3px, 4px 4px, 5px 5px, 3px 3px, 4px 4px;
+    mix-blend-mode: screen;
+    opacity: 0.6;
+  }
+  /* Top spotlight cone */
+  .lobby-stage::after {
+    content: ""; position: absolute;
+    top: -60px; left: 50%; transform: translateX(-50%);
+    width: 520px; height: 280px;
+    background: radial-gradient(ellipse at top, rgba(255,210,120,0.24) 0%, rgba(255,180,60,0.10) 40%, transparent 70%);
+    pointer-events: none; z-index: 2;
+    filter: blur(2px);
   }
 
-  /* Top-right coin counter */
+  /* Decorative giant suits in 4 corners */
+  .bg-suits {
+    position: absolute; inset: 0;
+    pointer-events: none; z-index: 2;
+    overflow: hidden;
+  }
+  .bg-suits .suit {
+    position: absolute;
+    font-size: 160px;
+    font-weight: 700;
+    opacity: 0.055;
+    line-height: 1;
+    color: #fff;
+    text-shadow: 0 0 40px rgba(255,215,120,0.3);
+  }
+  .bg-suits .s1 { top: -28px; left: -24px; transform: rotate(-18deg); color: #ffd166; }
+  .bg-suits .s2 { top: -20px; right: -28px; transform: rotate(22deg); color: #ff6b7a; }
+  .bg-suits .s3 { bottom: 40px; left: -28px; transform: rotate(18deg); color: #ff6b7a; }
+  .bg-suits .s4 { bottom: 50px; right: -32px; transform: rotate(-22deg); color: #ffd166; }
+
+  /* Bokeh light specks */
+  .bg-bokeh {
+    position: absolute; inset: 0;
+    pointer-events: none; z-index: 3;
+    overflow: hidden;
+  }
+  .bokeh {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(8px);
+    opacity: 0.55;
+    will-change: transform, opacity;
+  }
+  .bokeh.b-gold { background: radial-gradient(circle, rgba(255,215,130,0.85) 0%, rgba(255,190,80,0) 70%); }
+  .bokeh.b-red  { background: radial-gradient(circle, rgba(255,120,140,0.7) 0%, rgba(255,70,90,0) 70%); }
+  .bokeh.b-violet { background: radial-gradient(circle, rgba(180,130,255,0.6) 0%, rgba(120,70,220,0) 70%); }
+  .bk1 { width: 14px; height: 14px; top: 18%; left: 8%;  animation: bk-float 9s ease-in-out infinite; }
+  .bk2 { width: 22px; height: 22px; top: 62%; left: 12%; animation: bk-float 11s ease-in-out infinite 1.2s; }
+  .bk3 { width: 10px; height: 10px; top: 32%; right: 10%; animation: bk-float 8s ease-in-out infinite 0.6s; }
+  .bk4 { width: 18px; height: 18px; top: 70%; right: 14%; animation: bk-float 12s ease-in-out infinite 2s; }
+  .bk5 { width: 8px;  height: 8px;  top: 82%; left: 40%; animation: bk-float 10s ease-in-out infinite 1.8s; }
+  .bk6 { width: 12px; height: 12px; top: 46%; left: 50%; animation: bk-float 13s ease-in-out infinite 0.3s; }
+  .bk7 { width: 16px; height: 16px; top: 10%; left: 60%; animation: bk-float 9.5s ease-in-out infinite 2.4s; }
+  @keyframes bk-float {
+    0%, 100% { transform: translate(0,0); opacity: 0.35; }
+    25% { transform: translate(6px,-14px); opacity: 0.7; }
+    50% { transform: translate(-4px,-28px); opacity: 0.55; }
+    75% { transform: translate(-10px,-12px); opacity: 0.75; }
+  }
+
+  /* Top-right coin capsule (premium) */
   .coin-counter {
     position: absolute;
-    top: 12px; right: 14px;
-    background: rgba(0,0,0,0.55);
+    top: 10px; right: 12px;
+    background: linear-gradient(135deg, rgba(70,40,8,0.88), rgba(30,16,4,0.92));
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(255,209,102,0.35);
-    color: #ffd166;
-    font-weight: 700;
+    border: 1px solid rgba(255,209,102,0.55);
+    color: #ffe59a;
+    font-weight: 800;
     font-size: 13px;
-    padding: 6px 12px;
+    padding: 5px 4px 5px 12px;
     border-radius: 999px;
     z-index: 25;
-    display: flex; align-items: center; gap: 5px;
+    display: flex; align-items: center; gap: 6px;
+    box-shadow:
+      0 4px 12px rgba(0,0,0,0.5),
+      0 0 16px rgba(255,180,60,0.25),
+      inset 0 1px 0 rgba(255,230,160,0.25);
   }
-  .coin-counter .coin { font-size: 14px; }
-  .coin-counter .val { letter-spacing: 0.3px; }
-
-  /* Title at top */
-  .lobby-greet {
-    position: absolute;
-    top: 14px; left: 16px;
-    z-index: 20;
+  .coin-counter .coin {
+    font-size: 15px;
+    filter: drop-shadow(0 0 4px rgba(255,200,80,0.6));
   }
-  .lobby-greet .h {
-    font-size: 22px; font-weight: 800; letter-spacing: 0.4px;
-    background: linear-gradient(135deg, #ffd166 0%, #ff9500 100%);
+  .coin-counter .val {
+    letter-spacing: 0.4px;
+    background: linear-gradient(180deg, #fff5cc, #ffca55);
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
   }
+  .coin-counter .topup-plus {
+    margin-left: 2px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: linear-gradient(135deg, #ffd166, #ff9500);
+    color: #4a2200;
+    font-size: 15px; font-weight: 900; line-height: 20px;
+    text-align: center;
+    border: 1px solid rgba(255,230,160,0.6);
+    box-shadow: 0 0 8px rgba(255,180,60,0.5);
+    cursor: pointer;
+    padding: 0;
+  }
+  .coin-counter .topup-plus:active { transform: scale(0.9); }
+
+  /* Top-left brand LOGO block */
+  .lobby-greet {
+    position: absolute;
+    top: 10px; left: 0; right: 0;
+    z-index: 20;
+    text-align: center;
+    pointer-events: none;
+  }
+  .lobby-greet .h {
+    display: inline-block;
+    font-size: 22px; font-weight: 900;
+    letter-spacing: 3.5px;
+    background: linear-gradient(180deg, #fff3c7 0%, #ffd166 35%, #c8892a 65%, #8a5a15 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    filter: drop-shadow(0 0 10px rgba(255,180,60,0.35));
+  }
+  .lobby-greet .h .suit-ico { -webkit-text-fill-color: #ffd166; font-size: 18px; margin-right: 4px; }
   .lobby-greet .s {
-    font-size: 11px; color: rgba(255,255,255,0.5);
-    margin-top: 2px; letter-spacing: 1px;
+    font-size: 9px; color: rgba(255,215,140,0.7);
+    margin-top: 1px; letter-spacing: 6px;
+    font-weight: 600;
+  }
+  .lobby-greet .gold-line {
+    width: 120px; height: 1px;
+    margin: 3px auto 0;
+    background: linear-gradient(90deg, transparent, rgba(255,209,102,0.8), transparent);
+  }
+
+  /* VIP & Event badges (left side) */
+  .lobby-badges {
+    position: absolute;
+    top: 54px; left: 10px;
+    z-index: 22;
+    display: flex; flex-direction: column; gap: 6px;
+    pointer-events: auto;
+  }
+  .vip-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px 4px 8px;
+    border-radius: 999px;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.8px;
+    background: linear-gradient(135deg, rgba(90,200,250,0.25), rgba(0,122,255,0.28));
+    border: 1px solid rgba(130,210,255,0.6);
+    color: #d6ecff;
+    box-shadow: 0 0 10px rgba(90,180,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .vip-chip .gem { font-size: 11px; }
+  .event-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.3px;
+    background: linear-gradient(135deg, #ff9500, #ff3b30);
+    color: #fff;
+    border: 1px solid rgba(255,220,150,0.7);
+    box-shadow: 0 0 14px rgba(255,120,60,0.55);
+    animation: event-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes event-pulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(255,120,60,0.45), inset 0 1px 0 rgba(255,255,255,0.3); transform: scale(1); }
+    50% { box-shadow: 0 0 20px rgba(255,150,80,0.85), inset 0 1px 0 rgba(255,255,255,0.4); transform: scale(1.04); }
   }
 
   /* Central table */
   .lobby-table-wrap {
     position: absolute;
-    top: 56px; left: 50%;
+    top: 78px; left: 50%;
     transform: translateX(-50%);
-    width: 320px; height: 240px;
+    width: 330px; height: 220px;
     z-index: 12;
   }
   .lobby-table {
     position: absolute; inset: 0;
     background:
-      radial-gradient(closest-side, #0e6b48 0%, #0a4f35 60%, #06301d 100%);
-    border-radius: 160px / 120px;
+      radial-gradient(closest-side, #116b48 0%, #0a4a30 55%, #052015 100%);
+    border-radius: 170px / 115px;
     box-shadow:
-      0 0 0 6px #5a3a1a,
-      0 0 0 9px #2a1a08,
-      0 30px 70px rgba(0,0,0,0.65),
-      inset 0 0 60px rgba(0,0,0,0.5);
+      0 0 0 4px #f1d184,
+      0 0 0 7px #a57a2a,
+      0 0 0 10px #6a4a18,
+      0 0 0 12px #2a1a08,
+      0 30px 70px rgba(0,0,0,0.75),
+      0 0 40px rgba(255,180,60,0.15),
+      inset 0 0 70px rgba(0,0,0,0.6),
+      inset 0 0 22px rgba(80,200,140,0.2);
   }
   .lobby-table::before {
-    content: ""; position: absolute; inset: 14px;
-    border: 1px dashed rgba(255,255,255,0.12);
-    border-radius: 150px / 110px;
+    content: ""; position: absolute; inset: 16px;
+    border: 1px dashed rgba(255,220,150,0.18);
+    border-radius: 160px / 106px;
+  }
+  .lobby-table::after {
+    content: "♠";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -55%);
+    font-size: 120px;
+    color: rgba(255,255,255,0.035);
+    line-height: 1;
+    font-weight: 900;
+    pointer-events: none;
   }
   .lobby-table-logo {
-    position: absolute; bottom: 20px; left: 50%;
+    position: absolute; bottom: 18px; left: 50%;
     transform: translateX(-50%);
-    font-size: 10px; letter-spacing: 4px;
-    color: rgba(255,255,255,0.22);
-    font-weight: 700;
+    font-size: 9px; letter-spacing: 5px;
+    color: rgba(255,220,150,0.28);
+    font-weight: 800;
   }
   /* Deck on table */
   .deck-stack {
     position: absolute;
-    top: 50%; left: 26%;
+    top: 58%; left: 22%;
     transform: translate(-50%, -50%);
     width: 36px; height: 50px;
   }
@@ -615,115 +779,162 @@
     background-image:
       linear-gradient(135deg, #1e3a8a 0%, #0b1c4a 100%),
       repeating-linear-gradient(45deg, rgba(255,255,255,0.08) 0 4px, transparent 4px 8px);
-    box-shadow: 0 3px 8px rgba(0,0,0,0.45);
-    border: 1px solid rgba(255,255,255,0.18);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.55);
+    border: 1px solid rgba(255,220,150,0.3);
   }
   .deck-stack .deck-card:nth-child(1) { transform: translate(-2px, -2px) rotate(-3deg); }
   .deck-stack .deck-card:nth-child(2) { transform: translate(0, 0) rotate(2deg); }
   .deck-stack .deck-card:nth-child(3) { transform: translate(2px, -1px) rotate(-1deg); }
 
-  /* Dealer */
-  .dealer-wrap {
+  /* Table edge lights */
+  .table-lights { position: absolute; inset: 0; pointer-events: none; }
+  .table-lights .tl {
     position: absolute;
-    top: 38%; left: 62%;
-    transform: translate(-50%, -50%);
-    width: 130px; height: 160px;
-    z-index: 14;
-    pointer-events: none;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #ffd166;
+    box-shadow: 0 0 10px 2px rgba(255,209,102,0.8);
+    animation: tl-breathe 2.2s ease-in-out infinite;
   }
-  .dealer-emoji {
-    position: absolute;
-    top: 20px; left: 50%;
-    transform: translateX(-50%);
-    font-size: 92px;
-    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.6));
-    will-change: transform;
-    animation: dealer-breathe 4s ease-in-out infinite;
-    line-height: 1;
-  }
-  @keyframes dealer-breathe {
-    0%, 100% { transform: translateX(-50%) scale(1); }
-    50% { transform: translateX(-50%) scale(1.03); }
-  }
-  /* Bowtie SVG layer */
-  .dealer-bowtie {
-    position: absolute;
-    top: 75px; left: 50%;
-    transform: translateX(-50%);
-    width: 36px; height: 14px;
-    z-index: 2;
-    pointer-events: none;
+  .tl1 { top: 2px;  left: 50%; transform: translateX(-50%); animation-delay: 0s; }
+  .tl2 { top: 40%; left: 0;   animation-delay: 0.4s; }
+  .tl3 { top: 40%; right: 0;  animation-delay: 0.8s; }
+  .tl4 { bottom: 0; left: 25%; animation-delay: 1.2s; }
+  .tl5 { bottom: 0; right: 25%; animation-delay: 1.6s; }
+  .tl6 { bottom: -2px; left: 50%; transform: translateX(-50%); animation-delay: 2s; }
+  @keyframes tl-breathe {
+    0%, 100% { opacity: 0.4; box-shadow: 0 0 6px 1px rgba(255,209,102,0.55); }
+    50% { opacity: 1; box-shadow: 0 0 14px 3px rgba(255,209,102,0.95); }
   }
 
-  /* Float cards around dealer */
+  /* ===========================
+     Dealer wrap (premium SVG)
+     =========================== */
+  .dealer-wrap {
+    position: absolute;
+    top: 20%; left: 62%;
+    transform: translate(-50%, -50%);
+    width: 220px; height: 300px;
+    z-index: 14;
+    pointer-events: none;
+    filter: drop-shadow(0 10px 22px rgba(0,0,0,0.7));
+  }
+  .dealer-svg {
+    width: 100%; height: 100%;
+    overflow: visible;
+    will-change: transform;
+    animation: dealer-breathe 2.8s ease-in-out infinite;
+  }
+  @keyframes dealer-breathe {
+    0%, 100% { transform: scale(1, 1); }
+    50% { transform: scale(1.006, 1.012); }
+  }
+  .dealer-svg #back-hair {
+    transform-origin: 110px 130px;
+    animation: hair-sway 3.5s ease-in-out infinite;
+  }
+  @keyframes hair-sway {
+    0%, 100% { transform: rotate(-1.2deg); }
+    50% { transform: rotate(1.2deg); }
+  }
+  .dealer-svg .eye {
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  .dealer-svg #eye-left  { animation: blink 6.3s ease-in-out infinite; }
+  .dealer-svg #eye-right { animation: blink 6.3s ease-in-out infinite; }
+  @keyframes blink {
+    0%, 94%, 100% { transform: scaleY(1); }
+    96%, 98% { transform: scaleY(0.08); }
+  }
+  .dealer-svg #cards-fan {
+    transform-origin: 80px 240px;
+    transform-box: fill-box;
+    animation: cards-fan 2.4s ease-in-out infinite;
+  }
+  @keyframes cards-fan {
+    0%, 100% { transform: rotate(-1.5deg) translateY(0); }
+    50% { transform: rotate(1.5deg) translateY(-2px); }
+  }
+  .dealer-svg #bowtie {
+    transform-origin: center;
+    transform-box: fill-box;
+    animation: bow-wiggle 3.2s ease-in-out infinite;
+  }
+  @keyframes bow-wiggle {
+    0%, 100% { transform: rotate(-0.8deg); }
+    50% { transform: rotate(0.8deg); }
+  }
+
+  /* Float cards (premium SVG mini-cards) */
   .card-float {
     position: absolute;
-    width: 26px; height: 36px;
-    border-radius: 5px;
-    background: #fff;
-    color: #d93025;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 700;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    width: 50px; height: 72px;
     will-change: transform;
-    line-height: 1;
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.55));
   }
-  .card-float .r { font-size: 11px; line-height: 1; }
-  .card-float .s { font-size: 10px; line-height: 1; }
-  .card-float.black { color: #111; }
+  .card-float svg { width: 100%; height: 100%; display: block; }
   .card-float.cf1 {
-    top: 8px; left: -8px;
-    animation: float-card 3.2s ease-in-out infinite;
+    top: -10px; left: -34px;
+    animation: float-card 3.4s ease-in-out infinite;
     animation-delay: 0s;
   }
   .card-float.cf2 {
-    top: 28px; right: -10px;
-    animation: float-card 3.2s ease-in-out infinite;
-    animation-delay: 0.6s;
+    top: 18px; right: -44px;
+    animation: float-card 3.4s ease-in-out infinite;
+    animation-delay: 0.8s;
   }
   .card-float.cf3 {
-    top: 56px; left: 2px;
-    animation: float-card 3.2s ease-in-out infinite;
-    animation-delay: 1.2s;
+    top: 88px; left: -40px;
+    animation: float-card 3.4s ease-in-out infinite;
+    animation-delay: 1.6s;
   }
   @keyframes float-card {
-    0%, 100% { transform: translateY(0) rotate(-6deg); }
-    50% { transform: translateY(-8px) rotate(6deg); }
+    0%, 100% { transform: translateY(0) rotate(-8deg); }
+    50% { transform: translateY(-10px) rotate(8deg); }
   }
 
-  /* Speech bubble */
+  /* Speech bubble (modern comic) */
   .dealer-bubble {
     position: absolute;
-    top: -8px; left: 100%;
-    transform: translateX(-10px);
-    background: #fff;
-    color: #1c1c1e;
-    font-size: 11px;
+    top: -14px; left: -12px;
+    background: linear-gradient(135deg, rgba(20,15,30,0.82), rgba(10,8,20,0.88));
+    color: #fff2d0;
+    font-size: 12px;
     font-weight: 600;
-    padding: 6px 10px;
-    border-radius: 14px 14px 14px 4px;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+    padding: 8px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,209,102,0.55);
+    box-shadow:
+      0 8px 20px rgba(0,0,0,0.6),
+      0 0 16px rgba(255,180,60,0.18),
+      inset 0 1px 0 rgba(255,230,160,0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     white-space: nowrap;
     opacity: 0;
-    transition: opacity 0.3s;
+    transform: translate(0, 6px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
     pointer-events: none;
     z-index: 5;
+    letter-spacing: 0.2px;
   }
-  .dealer-bubble.show { opacity: 1; }
+  .dealer-bubble.show { opacity: 1; transform: translate(0, 0); }
   .dealer-bubble::after {
     content: ""; position: absolute;
-    bottom: -5px; left: 6px;
+    bottom: -7px; left: 22px;
     width: 0; height: 0;
-    border-left: 6px solid transparent;
-    border-top: 6px solid #fff;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 8px solid rgba(15,10,22,0.85);
+    filter: drop-shadow(0 1px 0 rgba(255,209,102,0.4));
   }
 
-  /* Arc buttons */
+  /* Arc buttons (premium) */
   .arc-btns {
     position: absolute;
     left: 0; right: 0;
-    bottom: 30px;
-    height: 200px;
+    bottom: 32px;
+    height: 210px;
     z-index: 30;
     pointer-events: none;
   }
@@ -734,14 +945,14 @@
     border-radius: 50%;
     pointer-events: auto;
     background:
-      radial-gradient(circle at 30% 25%, rgba(255,255,255,0.16), rgba(255,255,255,0.04) 60%, rgba(0,0,0,0.35) 100%);
-    border: 1.5px solid rgba(255,255,255,0.18);
+      radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), rgba(255,255,255,0.04) 60%, rgba(0,0,0,0.42) 100%);
+    border: 1.5px solid rgba(255,255,255,0.22);
     box-shadow:
-      0 8px 24px rgba(0,0,0,0.45),
+      0 8px 24px rgba(0,0,0,0.5),
       inset 0 0 0 1px rgba(255,255,255,0.06),
       inset 0 2px 6px rgba(255,255,255,0.08);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(22px) saturate(170%);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
     transition: transform 0.15s ease;
@@ -759,7 +970,7 @@
     color: #fff;
   }
   .arc-btn .icon {
-    font-size: 32px;
+    font-size: 30px;
     line-height: 1;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
   }
@@ -767,18 +978,43 @@
     position: absolute;
     bottom: -22px; left: 50%;
     transform: translateX(-50%);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    color: rgba(255,255,255,0.85);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    color: rgba(255,245,220,0.95);
     white-space: nowrap;
     margin: 0;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.7);
   }
-  .arc-btn.b1 { border-color: rgba(0,122,255,0.45); box-shadow: 0 8px 24px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.06), inset 0 2px 6px rgba(255,255,255,0.08), 0 0 18px rgba(0,122,255,0.25); }
-  .arc-btn.b2 { border-color: rgba(255,149,0,0.45); box-shadow: 0 8px 24px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.06), inset 0 2px 6px rgba(255,255,255,0.08), 0 0 18px rgba(255,149,0,0.25); }
-  .arc-btn.b3 { border-color: rgba(52,199,89,0.45); box-shadow: 0 8px 24px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.06), inset 0 2px 6px rgba(255,255,255,0.08), 0 0 18px rgba(52,199,89,0.25); }
-  .arc-btn.b4 { border-color: rgba(255,59,48,0.45); box-shadow: 0 8px 24px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.06), inset 0 2px 6px rgba(255,255,255,0.08), 0 0 18px rgba(255,59,48,0.25); }
+  .arc-btn.b1 { border-color: rgba(120,170,255,0.55); box-shadow: 0 8px 24px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.07), inset 0 2px 6px rgba(255,255,255,0.1), 0 0 20px rgba(80,130,255,0.32); }
+  .arc-btn.b2 { border-color: rgba(255,180,80,0.6); box-shadow: 0 8px 24px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.07), inset 0 2px 6px rgba(255,255,255,0.1), 0 0 20px rgba(255,160,50,0.4); }
+  /* b3 = 创建 (secondary, stronger green) */
+  .arc-btn.b3 {
+    border-color: rgba(90,230,150,0.6);
+    box-shadow:
+      0 8px 24px rgba(0,0,0,0.5),
+      inset 0 0 0 1px rgba(255,255,255,0.07),
+      inset 0 2px 6px rgba(255,255,255,0.1),
+      0 0 22px rgba(52,199,89,0.5);
+  }
+  /* b4 = 加入 (primary CTA, larger + gold pulse) */
+  .arc-btn.b4 {
+    width: 78px; height: 78px;
+    border-color: rgba(255,209,102,0.9);
+    background:
+      radial-gradient(circle at 30% 25%, rgba(255,230,160,0.32), rgba(255,170,60,0.16) 55%, rgba(90,50,10,0.42) 100%);
+    box-shadow:
+      0 10px 28px rgba(0,0,0,0.55),
+      inset 0 0 0 1px rgba(255,240,200,0.22),
+      inset 0 2px 6px rgba(255,255,255,0.2),
+      0 0 28px rgba(255,180,60,0.65);
+    animation: cta-pulse 2.4s ease-in-out infinite;
+  }
+  .arc-btn.b4 .icon { font-size: 34px; }
+  @keyframes cta-pulse {
+    0%, 100% { box-shadow: 0 10px 28px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,240,200,0.2), inset 0 2px 6px rgba(255,255,255,0.18), 0 0 22px rgba(255,180,60,0.5); }
+    50% { box-shadow: 0 10px 28px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,240,200,0.25), inset 0 2px 6px rgba(255,255,255,0.22), 0 0 36px rgba(255,200,100,0.85); }
+  }
 
   /* ===========================
      Profile / Topup / Create / Join page styles
@@ -1133,6 +1369,9 @@
   html:not([data-screen="lobby"]) .lobby-table-wrap,
   html:not([data-screen="lobby"]) .lobby-table,
   html:not([data-screen="lobby"]) .lobby-greet,
+  html:not([data-screen="lobby"]) .lobby-badges,
+  html:not([data-screen="lobby"]) .bg-suits,
+  html:not([data-screen="lobby"]) .bg-bokeh,
   html:not([data-screen="lobby"]) .coin-counter {
     display: none !important;
   }
@@ -1156,15 +1395,42 @@
        ===================================================== -->
   <div class="page lobby active" id="lobbyPage">
     <div class="lobby-stage">
-      <!-- Greeting -->
-      <div class="lobby-greet">
-        <div class="h">HOLD'EM</div>
-        <div class="s">CASINO · LOBBY</div>
+      <!-- Decorative giant suits -->
+      <div class="bg-suits">
+        <div class="suit s1">♠</div>
+        <div class="suit s2">♥</div>
+        <div class="suit s3">♦</div>
+        <div class="suit s4">♣</div>
       </div>
-      <!-- Coin counter -->
+      <!-- Bokeh light specks -->
+      <div class="bg-bokeh">
+        <div class="bokeh b-gold bk1"></div>
+        <div class="bokeh b-gold bk2"></div>
+        <div class="bokeh b-red bk3"></div>
+        <div class="bokeh b-violet bk4"></div>
+        <div class="bokeh b-gold bk5"></div>
+        <div class="bokeh b-red bk6"></div>
+        <div class="bokeh b-violet bk7"></div>
+      </div>
+
+      <!-- Brand LOGO at top center -->
+      <div class="lobby-greet">
+        <div class="h"><span class="suit-ico">♠</span>TEXAS HOLD'EM</div>
+        <div class="s">ROYAL · CASINO</div>
+        <div class="gold-line"></div>
+      </div>
+
+      <!-- Coin counter (top right) -->
       <div class="coin-counter" id="lobbyCoins">
         <span class="coin">💰</span>
         <span class="val" id="lobbyCoinVal">0</span>
+        <button class="topup-plus" id="lobbyTopupPlus" aria-label="充值">+</button>
+      </div>
+
+      <!-- VIP + Event badges (top left) -->
+      <div class="lobby-badges">
+        <span class="vip-chip"><span class="gem">💎</span><span>钻卡玩家</span></span>
+        <span class="event-chip">🔥 双倍金币 +200%</span>
       </div>
 
       <!-- Central table + dealer -->
@@ -1176,18 +1442,287 @@
             <div class="deck-card"></div>
             <div class="deck-card"></div>
           </div>
+          <div class="table-lights">
+            <div class="tl tl1"></div>
+            <div class="tl tl2"></div>
+            <div class="tl tl3"></div>
+            <div class="tl tl4"></div>
+            <div class="tl tl5"></div>
+            <div class="tl tl6"></div>
+          </div>
         </div>
-        <!-- Dealer & floating cards & bubble -->
+
+        <!-- Premium SVG Dealer -->
         <div class="dealer-wrap">
-          <div class="dealer-emoji" id="dealerEmoji">💁‍♀️</div>
-          <svg class="dealer-bowtie" viewBox="0 0 36 14">
-            <path d="M2 7 L14 2 L14 12 Z" fill="#ff3b30"/>
-            <path d="M34 7 L22 2 L22 12 Z" fill="#ff3b30"/>
-            <rect x="14" y="3" width="8" height="8" rx="1.5" fill="#c52a23"/>
+          <svg class="dealer-svg" id="dealerSvg" viewBox="0 0 220 320" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="skinGrad" cx="50%" cy="40%" r="60%">
+                <stop offset="0%" stop-color="#fde0c8"/>
+                <stop offset="60%" stop-color="#f5d0b0"/>
+                <stop offset="100%" stop-color="#e0b090"/>
+              </radialGradient>
+              <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#3d2010"/>
+                <stop offset="60%" stop-color="#2a1408"/>
+                <stop offset="100%" stop-color="#1a0a04"/>
+              </linearGradient>
+              <linearGradient id="suitGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#2a2a32"/>
+                <stop offset="50%" stop-color="#16161c"/>
+                <stop offset="100%" stop-color="#08080c"/>
+              </linearGradient>
+              <linearGradient id="bowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#e8485e"/>
+                <stop offset="60%" stop-color="#c83a4e"/>
+                <stop offset="100%" stop-color="#8a1828"/>
+              </linearGradient>
+              <linearGradient id="lipUpGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#d8485e"/>
+                <stop offset="100%" stop-color="#a02038"/>
+              </linearGradient>
+              <linearGradient id="lipDnGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#c83a52"/>
+                <stop offset="100%" stop-color="#7a1828"/>
+              </linearGradient>
+              <radialGradient id="goldGrad" cx="35%" cy="30%" r="80%">
+                <stop offset="0%" stop-color="#fff3b8"/>
+                <stop offset="40%" stop-color="#f5cf60"/>
+                <stop offset="100%" stop-color="#8a6018"/>
+              </radialGradient>
+              <linearGradient id="cardGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffe28a"/>
+                <stop offset="100%" stop-color="#c89933"/>
+              </linearGradient>
+              <radialGradient id="blushGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#f4a8a8" stop-opacity="0.55"/>
+                <stop offset="100%" stop-color="#f4a8a8" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+
+            <!-- ===== Back hair (sways) ===== -->
+            <g id="back-hair">
+              <path d="M50 110 Q40 70 70 50 Q110 24 158 48 Q188 66 184 110 Q190 150 178 200 Q170 240 156 268 Q150 282 138 286 L138 200 Q150 170 152 130 Q140 110 110 110 Q78 108 70 130 Q66 158 70 200 L70 286 Q56 282 50 264 Q40 220 44 170 Q44 138 50 110 Z" fill="url(#hairGrad)"/>
+              <path d="M58 130 Q56 168 62 210 Q66 240 72 260" stroke="#1a0a04" stroke-width="0.8" fill="none" opacity="0.6"/>
+              <path d="M168 130 Q172 168 168 210 Q164 240 158 260" stroke="#1a0a04" stroke-width="0.8" fill="none" opacity="0.6"/>
+              <!-- highlight strands -->
+              <path d="M64 100 Q66 140 70 180" stroke="#5a3018" stroke-width="0.8" fill="none" opacity="0.5"/>
+              <path d="M168 100 Q170 140 168 180" stroke="#5a3018" stroke-width="0.8" fill="none" opacity="0.5"/>
+            </g>
+
+            <!-- ===== Neck & shoulders ===== -->
+            <path d="M92 175 Q92 200 90 218 L130 218 Q128 200 128 175 Z" fill="url(#skinGrad)"/>
+            <path d="M92 200 Q110 210 128 200 L128 218 L92 218 Z" fill="#d4a48a" opacity="0.55"/>
+            <!-- collarbone shadow -->
+            <path d="M84 222 Q110 230 136 222" stroke="#c89878" stroke-width="0.8" fill="none" opacity="0.5"/>
+
+            <!-- ===== Shoulders / suit V-collar ===== -->
+            <path d="M30 320 L30 260 Q40 230 70 222 L90 218 L110 252 L130 218 L150 222 Q180 230 190 260 L190 320 Z" fill="url(#suitGrad)"/>
+            <path d="M70 222 L110 252 L150 222 L138 230 L110 262 L82 230 Z" fill="#08080c" opacity="0.85"/>
+            <path d="M30 260 Q40 232 70 224 L84 240 L40 320 L30 320 Z" fill="#0a0a10" opacity="0.6"/>
+            <path d="M190 260 Q180 232 150 224 L136 240 L180 320 L190 320 Z" fill="#0a0a10" opacity="0.6"/>
+            <!-- shirt white triangle -->
+            <path d="M88 226 L110 260 L132 226 L122 232 L110 250 L98 232 Z" fill="#f8f8f8"/>
+            <path d="M96 230 L110 252 L124 230" stroke="#c8c8c8" stroke-width="0.6" fill="none"/>
+            <!-- suit lapel highlights -->
+            <path d="M72 226 L86 240" stroke="#3a3a44" stroke-width="0.8" fill="none" opacity="0.7"/>
+            <path d="M148 226 L134 240" stroke="#3a3a44" stroke-width="0.8" fill="none" opacity="0.7"/>
+
+            <!-- ===== Bowtie (3D layered) ===== -->
+            <g id="bowtie">
+              <!-- shadow under bow -->
+              <ellipse cx="110" cy="246" rx="26" ry="3" fill="#000" opacity="0.35"/>
+              <!-- left wing -->
+              <path d="M110 244 L82 234 Q76 244 82 256 L110 248 Z" fill="url(#bowGrad)"/>
+              <!-- right wing -->
+              <path d="M110 244 L138 234 Q144 244 138 256 L110 248 Z" fill="url(#bowGrad)"/>
+              <!-- inner shadow on wings -->
+              <path d="M110 246 L86 240 Q82 248 86 254 L110 250 Z" fill="#8a1828" opacity="0.6"/>
+              <path d="M110 246 L134 240 Q138 248 134 254 L110 250 Z" fill="#8a1828" opacity="0.6"/>
+              <!-- center knot -->
+              <rect x="104" y="240" width="12" height="12" rx="2" fill="#a82838"/>
+              <rect x="104" y="240" width="12" height="4.5" rx="1.5" fill="#e85a6e" opacity="0.55"/>
+              <path d="M105 240 L105 252" stroke="#5a0814" stroke-width="0.6"/>
+              <path d="M115 240 L115 252" stroke="#5a0814" stroke-width="0.6"/>
+              <!-- tiny bowtie highlight -->
+              <path d="M86 238 Q92 238 96 240" stroke="#ff8090" stroke-width="0.8" fill="none" opacity="0.7"/>
+              <path d="M134 238 Q128 238 124 240" stroke="#ff8090" stroke-width="0.8" fill="none" opacity="0.7"/>
+            </g>
+
+            <!-- ===== Gold suit badge ===== -->
+            <g id="badge">
+              <circle cx="148" cy="280" r="9" fill="url(#goldGrad)" stroke="#8a6018" stroke-width="0.8"/>
+              <circle cx="148" cy="280" r="6.5" fill="none" stroke="#fff5cc" stroke-width="0.5" opacity="0.6"/>
+              <text x="148" y="284" text-anchor="middle" font-size="10" font-weight="900" fill="#3a2008" font-family="Georgia, serif">♠</text>
+            </g>
+
+            <!-- ===== Face ===== -->
+            <ellipse cx="110" cy="120" rx="42" ry="52" fill="url(#skinGrad)" stroke="#d8a890" stroke-width="0.6"/>
+            <!-- jawline shadow -->
+            <path d="M70 130 Q72 158 90 174 Q110 188 130 174 Q148 158 150 130" stroke="#d8a890" stroke-width="0.8" fill="none" opacity="0.6"/>
+            <!-- forehead subtle highlight -->
+            <ellipse cx="110" cy="92" rx="22" ry="10" fill="#fff0e0" opacity="0.18"/>
+
+            <!-- ===== Blush ===== -->
+            <ellipse cx="80" cy="142" rx="9" ry="6" fill="url(#blushGrad)"/>
+            <ellipse cx="140" cy="142" rx="9" ry="6" fill="url(#blushGrad)"/>
+
+            <!-- ===== Eyebrows ===== -->
+            <path d="M76 108 Q86 102 100 106 Q98 108 96 109 Q86 106 78 110 Z" fill="#3d2010"/>
+            <path d="M120 106 Q134 102 144 108 Q142 110 134 106 Q124 108 122 109 Z" fill="#3d2010"/>
+
+            <!-- ===== Eyes (almond shaped, with lashes & highlight) ===== -->
+            <g id="eye-left" class="eye">
+              <!-- eye almond white -->
+              <path d="M76 122 Q86 116 98 120 Q100 124 96 128 Q86 130 78 126 Q74 124 76 122 Z" fill="#fff" stroke="#3d2010" stroke-width="1.2"/>
+              <!-- iris -->
+              <circle cx="88" cy="123" r="4.2" fill="#5d3a1a"/>
+              <circle cx="88" cy="123" r="3.2" fill="#7a4a22"/>
+              <!-- pupil -->
+              <circle cx="88" cy="123" r="2" fill="#1a0f08"/>
+              <!-- highlight -->
+              <circle cx="89.4" cy="121.8" r="0.9" fill="#fff"/>
+              <circle cx="86.5" cy="124.3" r="0.4" fill="#fff" opacity="0.7"/>
+              <!-- upper lash line emphasis -->
+              <path d="M76 122 Q86 116 98 120" stroke="#1a0a04" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+              <!-- lashes -->
+              <path d="M77 121 L75 118" stroke="#1a0a04" stroke-width="0.7" stroke-linecap="round"/>
+              <path d="M81 119 L80 116" stroke="#1a0a04" stroke-width="0.7" stroke-linecap="round"/>
+              <path d="M86 118 L86 115" stroke="#1a0a04" stroke-width="0.7" stroke-linecap="round"/>
+              <path d="M92 118 L93 115" stroke="#1a0a04" stroke-width="0.7" stroke-linecap="round"/>
+              <path d="M97 120 L99 117" stroke="#1a0a04" stroke-width="0.7" stroke-linecap="round"/>
+            </g>
+            <g id="eye-right" class="eye">
+              <path d="M122 120 Q134 116 144 122 Q146 124 142 126 Q134 130 124 128 Q120 124 122 120 Z" fill="#fff" stroke="#3d2010" stroke-width="1.2"/>
+              <circle cx="132" cy="123" r="4.2" fill="#5d3a1a"/>
+              <circle cx="132" cy="123" r="3.2" fill="#7a4a22"/>
+              <circle cx="132" cy="123" r="2" fill="#1a0f08"/>
+              <circle cx="133.4" cy="121.8" r="0.9" fill="#fff"/>
+              <circle cx="130.5" cy="124.3" r="0.4" fill="#fff" opacity="0.7"/>
+              <path d="M122 120 Q134 116 144 122" stroke="#1a0a04" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+              <path d="M123 119 L121 116" stroke="#1a0a04" stroke-width="0.7" stroke-linecap="round"/>
+              <path d="M127 118 L126 115" stroke="#1a0a04" stroke-width="0.7" stroke-linecap="round"/>
+              <path d="M132 117 L132 114" stroke="#1a0a04" stroke-width="0.7" stroke-linecap="round"/>
+              <path d="M138 118 L139 115" stroke="#1a0a04" stroke-width="0.7" stroke-linecap="round"/>
+              <path d="M143 120 L145 117" stroke="#1a0a04" stroke-width="0.7" stroke-linecap="round"/>
+            </g>
+
+            <!-- ===== Nose ===== -->
+            <path d="M108 128 Q106 138 104 146 Q104 150 108 151" stroke="#d8a890" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.8"/>
+            <path d="M106 150 Q110 153 114 150" stroke="#c89878" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+            <ellipse cx="107" cy="151" rx="1.2" ry="0.6" fill="#c89878" opacity="0.5"/>
+            <ellipse cx="113" cy="151" rx="1.2" ry="0.6" fill="#c89878" opacity="0.5"/>
+
+            <!-- ===== Mouth (upper + lower lips + cleft) ===== -->
+            <!-- upper lip -->
+            <path d="M96 159 Q102 156 106 159 Q110 156 114 159 Q118 156 124 159 Q122 162 118 162 Q114 162 110 161 Q106 162 102 162 Q98 162 96 159 Z" fill="url(#lipUpGrad)"/>
+            <!-- cupid bow shadow -->
+            <path d="M106 158 Q108 156 110 158 Q112 156 114 158" stroke="#7a1828" stroke-width="0.5" fill="none"/>
+            <!-- lower lip -->
+            <path d="M98 162 Q104 168 110 169 Q116 168 122 162 Q118 166 110 167 Q102 166 98 162 Z" fill="url(#lipDnGrad)"/>
+            <!-- lip cleft / smile line -->
+            <path d="M96 161 Q110 163 124 161" stroke="#7a1828" stroke-width="0.7" fill="none" stroke-linecap="round"/>
+            <!-- lip highlight -->
+            <path d="M106 164 Q110 165 114 164" stroke="#ffb8c0" stroke-width="0.6" fill="none" opacity="0.7"/>
+
+            <!-- ===== Ears + earrings ===== -->
+            <ellipse cx="68" cy="124" rx="5" ry="8" fill="url(#skinGrad)" stroke="#d8a890" stroke-width="0.5"/>
+            <path d="M67 122 Q66 124 67 126" stroke="#c89878" stroke-width="0.6" fill="none"/>
+            <ellipse cx="152" cy="124" rx="5" ry="8" fill="url(#skinGrad)" stroke="#d8a890" stroke-width="0.5"/>
+            <path d="M153 122 Q154 124 153 126" stroke="#c89878" stroke-width="0.6" fill="none"/>
+            <!-- gold earrings -->
+            <circle cx="67" cy="134" r="2.4" fill="url(#goldGrad)" stroke="#8a6018" stroke-width="0.4"/>
+            <circle cx="153" cy="134" r="2.4" fill="url(#goldGrad)" stroke="#8a6018" stroke-width="0.4"/>
+            <circle cx="67" cy="133.4" r="0.7" fill="#fff5cc"/>
+            <circle cx="153" cy="133.4" r="0.7" fill="#fff5cc"/>
+
+            <!-- ===== Front bangs / side hair ===== -->
+            <path d="M70 88 Q72 70 92 60 Q118 50 142 62 Q158 72 156 96 Q150 84 132 80 Q114 78 96 84 Q82 90 70 102 Z" fill="url(#hairGrad)"/>
+            <!-- center fringe strands -->
+            <path d="M90 76 Q96 96 84 116 Q80 108 82 96 Q86 86 90 76 Z" fill="url(#hairGrad)"/>
+            <path d="M124 76 Q120 96 134 118 Q140 108 138 94 Q132 82 124 76 Z" fill="url(#hairGrad)"/>
+            <path d="M104 70 Q104 84 100 96" stroke="#5a3018" stroke-width="0.7" fill="none" opacity="0.6"/>
+            <path d="M118 70 Q120 84 122 96" stroke="#5a3018" stroke-width="0.7" fill="none" opacity="0.6"/>
+            <!-- side wisp left -->
+            <path d="M70 100 Q60 130 66 160" stroke="#1a0a04" stroke-width="1" fill="none"/>
+            <path d="M152 100 Q162 130 156 160" stroke="#1a0a04" stroke-width="1" fill="none"/>
+            <!-- hair sheen -->
+            <path d="M86 64 Q108 56 132 64" stroke="#7a4018" stroke-width="1.2" fill="none" opacity="0.6"/>
+
+            <!-- ===== Cards fan in left hand ===== -->
+            <g id="cards-fan">
+              <!-- hand silhouette under cards -->
+              <ellipse cx="80" cy="290" rx="14" ry="8" fill="url(#skinGrad)" stroke="#c89878" stroke-width="0.5"/>
+              <path d="M70 288 Q72 296 80 298 Q88 296 90 288" stroke="#c89878" stroke-width="0.6" fill="none"/>
+              <!-- card 1: A♠ (rotated -18deg) -->
+              <g transform="rotate(-18 80 280)">
+                <rect x="58" y="250" width="36" height="50" rx="4" fill="#fff" stroke="url(#cardGold)" stroke-width="1.5"/>
+                <text x="62" y="262" font-size="9" font-weight="900" fill="#1a1a1f" font-family="Georgia, serif">A</text>
+                <text x="62" y="272" font-size="8" fill="#1a1a1f">♠</text>
+                <text x="76" y="284" text-anchor="middle" font-size="20" font-weight="900" fill="#1a1a1f" font-family="Georgia, serif">♠</text>
+                <text x="90" y="298" text-anchor="end" font-size="9" font-weight="900" fill="#1a1a1f" font-family="Georgia, serif" transform="rotate(180 86 295)">A</text>
+              </g>
+              <!-- card 2: K♥ (center) -->
+              <g transform="rotate(-2 80 280)">
+                <rect x="64" y="244" width="36" height="50" rx="4" fill="#fff" stroke="url(#cardGold)" stroke-width="1.5"/>
+                <text x="68" y="256" font-size="9" font-weight="900" fill="#c8203a" font-family="Georgia, serif">K</text>
+                <text x="68" y="266" font-size="8" fill="#c8203a">♥</text>
+                <text x="82" y="278" text-anchor="middle" font-size="20" font-weight="900" fill="#c8203a" font-family="Georgia, serif">♥</text>
+                <text x="96" y="292" text-anchor="end" font-size="9" font-weight="900" fill="#c8203a" font-family="Georgia, serif" transform="rotate(180 92 289)">K</text>
+              </g>
+              <!-- card 3: Q♦ (rotated +14deg) -->
+              <g transform="rotate(14 80 280)">
+                <rect x="68" y="240" width="36" height="50" rx="4" fill="#fff" stroke="url(#cardGold)" stroke-width="1.5"/>
+                <text x="72" y="252" font-size="9" font-weight="900" fill="#c8203a" font-family="Georgia, serif">Q</text>
+                <text x="72" y="262" font-size="8" fill="#c8203a">♦</text>
+                <text x="86" y="274" text-anchor="middle" font-size="20" font-weight="900" fill="#c8203a" font-family="Georgia, serif">♦</text>
+                <text x="100" y="288" text-anchor="end" font-size="9" font-weight="900" fill="#c8203a" font-family="Georgia, serif" transform="rotate(180 96 285)">Q</text>
+              </g>
+            </g>
+
+            <!-- right hand resting (single back-of-card on table edge) -->
+            <g id="hand-right">
+              <ellipse cx="158" cy="296" rx="12" ry="7" fill="url(#skinGrad)" stroke="#c89878" stroke-width="0.5"/>
+              <g transform="rotate(8 158 296)">
+                <rect x="146" y="282" width="26" height="36" rx="3" fill="#1e3a8a" stroke="url(#cardGold)" stroke-width="1.2"/>
+                <rect x="148" y="284" width="22" height="32" rx="2" fill="none" stroke="#ffd166" stroke-width="0.5" opacity="0.6"/>
+                <path d="M150 286 L168 314 M168 286 L150 314" stroke="#ffd166" stroke-width="0.4" opacity="0.4"/>
+              </g>
+            </g>
           </svg>
-          <div class="card-float cf1"><div class="r">A</div><div class="s">♥</div></div>
-          <div class="card-float cf2 black"><div class="r">K</div><div class="s">♠</div></div>
-          <div class="card-float cf3"><div class="r">Q</div><div class="s">♦</div></div>
+
+          <!-- Floating premium SVG mini-cards -->
+          <div class="card-float cf1">
+            <svg viewBox="0 0 50 72">
+              <rect x="1" y="1" width="48" height="70" rx="5" fill="#fff" stroke="url(#cardGold)" stroke-width="1.5"/>
+              <defs><linearGradient id="cgA" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ffe28a"/><stop offset="100%" stop-color="#c89933"/></linearGradient></defs>
+              <rect x="1" y="1" width="48" height="70" rx="5" fill="none" stroke="url(#cgA)" stroke-width="1.5"/>
+              <text x="6" y="14" font-size="11" font-weight="900" fill="#c8203a" font-family="Georgia, serif">A</text>
+              <text x="6" y="24" font-size="9" fill="#c8203a">♥</text>
+              <text x="25" y="46" text-anchor="middle" font-size="26" font-weight="900" fill="#c8203a" font-family="Georgia, serif">♥</text>
+              <text x="44" y="68" text-anchor="end" font-size="11" font-weight="900" fill="#c8203a" font-family="Georgia, serif" transform="rotate(180 41 64)">A</text>
+            </svg>
+          </div>
+          <div class="card-float cf2">
+            <svg viewBox="0 0 50 72">
+              <defs><linearGradient id="cgB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ffe28a"/><stop offset="100%" stop-color="#c89933"/></linearGradient></defs>
+              <rect x="1" y="1" width="48" height="70" rx="5" fill="#fff" stroke="url(#cgB)" stroke-width="1.5"/>
+              <text x="6" y="14" font-size="11" font-weight="900" fill="#1a1a1f" font-family="Georgia, serif">K</text>
+              <text x="6" y="24" font-size="9" fill="#1a1a1f">♠</text>
+              <text x="25" y="46" text-anchor="middle" font-size="26" font-weight="900" fill="#1a1a1f" font-family="Georgia, serif">♠</text>
+              <text x="44" y="68" text-anchor="end" font-size="11" font-weight="900" fill="#1a1a1f" font-family="Georgia, serif" transform="rotate(180 41 64)">K</text>
+            </svg>
+          </div>
+          <div class="card-float cf3">
+            <svg viewBox="0 0 50 72">
+              <defs><linearGradient id="cgC" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ffe28a"/><stop offset="100%" stop-color="#c89933"/></linearGradient></defs>
+              <rect x="1" y="1" width="48" height="70" rx="5" fill="#fff" stroke="url(#cgC)" stroke-width="1.5"/>
+              <text x="6" y="14" font-size="11" font-weight="900" fill="#c8203a" font-family="Georgia, serif">Q</text>
+              <text x="6" y="24" font-size="9" fill="#c8203a">♦</text>
+              <text x="25" y="46" text-anchor="middle" font-size="26" font-weight="900" fill="#c8203a" font-family="Georgia, serif">♦</text>
+              <text x="44" y="68" text-anchor="end" font-size="11" font-weight="900" fill="#c8203a" font-family="Georgia, serif" transform="rotate(180 41 64)">Q</text>
+            </svg>
+          </div>
+
           <div class="dealer-bubble" id="dealerBubble">来玩一把吧 ♥️</div>
         </div>
       </div>
@@ -1216,7 +1751,7 @@
           <div class="arc-inner">
             <div class="icon">🔍</div>
           </div>
-          <div class="lbl">加入</div>
+          <div class="lbl">加入牌局</div>
         </button>
       </div>
     </div>
@@ -2539,14 +3074,27 @@ document.querySelectorAll('.arc-btn[data-page]').forEach(btn => {
   });
 });
 
+// Quick top-up shortcut (coin counter [+] button)
+(function wireTopupPlus() {
+  const btn = document.getElementById('lobbyTopupPlus');
+  if (btn) {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openPage('topupPage');
+    });
+  }
+})();
+
 /* ---------------- Lobby (gamified) ---------------- */
 const DEALER_LINES = [
-  '来玩一把吧 ♥️',
-  '欢迎回来！',
-  '今天手气不错哦~',
-  '试试创建房间？',
-  '荷官在线发牌中~',
-  '记得控制好牌池呀',
+  '欢迎回到 HOLD\'EM ♠',
+  '荷官为您洗牌发牌',
+  '今天的手气特别好哦~',
+  '来一把德州扑克吧 ♥',
+  '记得合理控制底池',
+  '双倍金币活动进行中 🔥',
+  '新手房间更友好哦',
+  '祝您牌运亨通 ♦',
 ];
 let dealerLineIdx = 0;
 let dealerTimer = null;
