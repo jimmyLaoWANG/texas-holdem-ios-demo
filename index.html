@@ -898,91 +898,393 @@
     filter: drop-shadow(0 1px 0 rgba(255,209,102,0.4));
   }
 
-  /* Arc buttons (premium) */
-  .arc-btns {
+  /* ===========================
+     v5: Stage halo behind dealer (gold + warm red double radial)
+     =========================== */
+  .stage-halo {
     position: absolute;
-    left: 0; right: 0;
-    bottom: 32px;
-    height: 210px;
-    z-index: 30;
-    pointer-events: none;
-  }
-  .arc-btn {
-    position: absolute;
-    left: 50%; bottom: 0;
-    width: 68px; height: 68px;
-    border-radius: 50%;
-    pointer-events: auto;
-    background:
-      radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), rgba(255,255,255,0.04) 60%, rgba(0,0,0,0.42) 100%);
-    border: 1.5px solid rgba(255,255,255,0.22);
-    box-shadow:
-      0 8px 24px rgba(0,0,0,0.5),
-      inset 0 0 0 1px rgba(255,255,255,0.06),
-      inset 0 2px 6px rgba(255,255,255,0.08);
-    backdrop-filter: blur(22px) saturate(170%);
-    -webkit-backdrop-filter: blur(22px) saturate(170%);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    transition: transform 0.15s ease;
-    color: #fff;
-    padding: 0;
-  }
-  .arc-btn:active { transform: scale(0.92); }
-  .arc-btn .arc-inner {
-    width: 100%; height: 100%;
-    background: transparent;
-    border: 0;
-    box-shadow: none;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff;
-  }
-  .arc-btn .icon {
-    font-size: 30px;
-    line-height: 1;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-  }
-  .arc-btn .lbl {
-    position: absolute;
-    bottom: -22px; left: 50%;
+    top: 40px; left: 50%;
     transform: translateX(-50%);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.6px;
-    color: rgba(255,245,220,0.95);
-    white-space: nowrap;
-    margin: 0;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.7);
-  }
-  .arc-btn.b1 { border-color: rgba(120,170,255,0.55); box-shadow: 0 8px 24px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.07), inset 0 2px 6px rgba(255,255,255,0.1), 0 0 20px rgba(80,130,255,0.32); }
-  .arc-btn.b2 { border-color: rgba(255,180,80,0.6); box-shadow: 0 8px 24px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.07), inset 0 2px 6px rgba(255,255,255,0.1), 0 0 20px rgba(255,160,50,0.4); }
-  /* b3 = 创建 (secondary, stronger green) */
-  .arc-btn.b3 {
-    border-color: rgba(90,230,150,0.6);
-    box-shadow:
-      0 8px 24px rgba(0,0,0,0.5),
-      inset 0 0 0 1px rgba(255,255,255,0.07),
-      inset 0 2px 6px rgba(255,255,255,0.1),
-      0 0 22px rgba(52,199,89,0.5);
-  }
-  /* b4 = 加入 (primary CTA, larger + gold pulse) */
-  .arc-btn.b4 {
-    width: 78px; height: 78px;
-    border-color: rgba(255,209,102,0.9);
+    width: 360px; height: 260px;
+    pointer-events: none; z-index: 11;
     background:
-      radial-gradient(circle at 30% 25%, rgba(255,230,160,0.32), rgba(255,170,60,0.16) 55%, rgba(90,50,10,0.42) 100%);
+      radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,210,120,0.35) 0%, rgba(255,180,60,0.12) 40%, transparent 70%),
+      radial-gradient(ellipse 80% 60% at 50% 60%, rgba(220,80,60,0.22) 0%, rgba(180,40,40,0.06) 45%, transparent 75%);
+    filter: blur(4px);
+    animation: halo-breathe 4.5s ease-in-out infinite;
+  }
+  @keyframes halo-breathe {
+    0%, 100% { opacity: 0.85; transform: translateX(-50%) scale(1); }
+    50% { opacity: 1; transform: translateX(-50%) scale(1.04); }
+  }
+
+  /* Spotlight cone arc (top gold) - extra layer */
+  .stage-cone {
+    position: absolute;
+    top: -30px; left: 50%;
+    transform: translateX(-50%);
+    width: 420px; height: 320px;
+    pointer-events: none; z-index: 4;
+    background:
+      conic-gradient(from 250deg at 50% 0%, transparent 0deg, rgba(255,220,130,0.18) 18deg, rgba(255,200,90,0.30) 30deg, rgba(255,220,130,0.18) 42deg, transparent 60deg);
+    filter: blur(6px);
+    opacity: 0.85;
+  }
+
+  /* Golden dust particles drifting up */
+  .bg-dust { position: absolute; inset: 0; pointer-events: none; z-index: 6; overflow: hidden; }
+  .dust {
+    position: absolute;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,225,150,0.95) 0%, rgba(255,180,60,0) 75%);
+    box-shadow: 0 0 6px rgba(255,200,100,0.6);
+    animation: dust-rise linear infinite;
+    opacity: 0;
+  }
+  .dust.d1 { left: 14%; bottom: -8px; animation-duration: 14s; animation-delay: 0s; }
+  .dust.d2 { left: 32%; bottom: -8px; animation-duration: 17s; animation-delay: 2.5s; width: 4px; height: 4px; }
+  .dust.d3 { left: 52%; bottom: -8px; animation-duration: 12s; animation-delay: 4s; }
+  .dust.d4 { left: 68%; bottom: -8px; animation-duration: 16s; animation-delay: 1.2s; width: 2px; height: 2px; }
+  .dust.d5 { left: 82%; bottom: -8px; animation-duration: 15s; animation-delay: 6s; width: 4px; height: 4px; }
+  .dust.d6 { left: 24%; bottom: -8px; animation-duration: 19s; animation-delay: 8s; }
+  @keyframes dust-rise {
+    0% { transform: translate(0, 0); opacity: 0; }
+    10% { opacity: 0.85; }
+    50% { transform: translate(-12px, -260px); opacity: 0.7; }
+    90% { opacity: 0.4; }
+    100% { transform: translate(8px, -520px); opacity: 0; }
+  }
+
+  /* Greet title (v5 dual-line + diamond divider) */
+  .lobby-greet .h2 {
+    margin-top: 2px;
+    font-size: 9.5px;
+    letter-spacing: 4px;
+    font-weight: 700;
+    background: linear-gradient(180deg, #ffe9a8 0%, #c89933 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    display: inline-block;
+  }
+  .lobby-greet .diamond-row {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin: 3px auto 0;
+  }
+  .lobby-greet .diamond-row .ln {
+    width: 50px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,209,102,0.85), transparent);
+  }
+  .lobby-greet .diamond-row .dm {
+    width: 5px; height: 5px;
+    background: linear-gradient(135deg, #ffe9a8, #c89933);
+    transform: rotate(45deg);
+    box-shadow: 0 0 6px rgba(255,200,100,0.7);
+  }
+
+  /* ===========================
+     v5: Entry cards (2x2 grid replacing arc buttons)
+     =========================== */
+  .entry-cards {
+    position: absolute;
+    left: 12px; right: 12px;
+    bottom: 22px;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .entry-card {
+    position: relative;
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    height: 60px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(40,28,60,0.78), rgba(20,14,32,0.86));
+    border: 1px solid rgba(255,255,255,0.10);
     box-shadow:
-      0 10px 28px rgba(0,0,0,0.55),
-      inset 0 0 0 1px rgba(255,240,200,0.22),
-      inset 0 2px 6px rgba(255,255,255,0.2),
-      0 0 28px rgba(255,180,60,0.65);
+      0 6px 18px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.2s, box-shadow 0.2s;
+    text-align: left;
+    font-family: inherit;
+  }
+  .entry-card:active { transform: scale(0.97); }
+  .entry-card .ec-ico {
+    flex-shrink: 0;
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, rgba(255,209,102,0.18), rgba(200,153,51,0.10));
+    border: 1px solid rgba(255,209,102,0.30);
+  }
+  .entry-card .ec-ico svg { display: block; width: 24px; height: 24px; }
+  .entry-card .ec-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.15; }
+  .entry-card .ec-title { font-size: 14px; font-weight: 700; letter-spacing: 0.3px; color: #fff; }
+  .entry-card .ec-sub { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 2px; letter-spacing: 0.2px; }
+
+  /* Primary CTA — 快速加入 (gold) */
+  .entry-card.cta {
+    background: linear-gradient(135deg, #f5d985, #c89933 50%, #f5d985);
+    border-color: rgba(255,240,200,0.65);
+    color: #2a1a08;
+    box-shadow:
+      0 8px 22px rgba(0,0,0,0.55),
+      0 0 24px rgba(255,200,90,0.55),
+      inset 0 1px 0 rgba(255,255,255,0.45);
     animation: cta-pulse 2.4s ease-in-out infinite;
   }
-  .arc-btn.b4 .icon { font-size: 34px; }
+  .entry-card.cta .ec-ico {
+    background: rgba(42,26,8,0.30);
+    border-color: rgba(42,26,8,0.55);
+  }
+  .entry-card.cta .ec-title { color: #2a1a08; font-weight: 800; }
+  .entry-card.cta .ec-sub { color: rgba(42,26,8,0.72); font-weight: 600; }
+
   @keyframes cta-pulse {
-    0%, 100% { box-shadow: 0 10px 28px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,240,200,0.2), inset 0 2px 6px rgba(255,255,255,0.18), 0 0 22px rgba(255,180,60,0.5); }
-    50% { box-shadow: 0 10px 28px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,240,200,0.25), inset 0 2px 6px rgba(255,255,255,0.22), 0 0 36px rgba(255,200,100,0.85); }
+    0%, 100% {
+      box-shadow:
+        0 8px 22px rgba(0,0,0,0.55),
+        0 0 18px rgba(255,200,90,0.45),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+    }
+    50% {
+      box-shadow:
+        0 8px 22px rgba(0,0,0,0.55),
+        0 0 32px rgba(255,220,130,0.85),
+        inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+  }
+
+  /* ===========================
+     v5: Daily reward floating card (right side)
+     =========================== */
+  .daily-reward {
+    position: absolute;
+    top: 132px; right: 8px;
+    width: 84px; height: 100px;
+    z-index: 24;
+    border-radius: 14px;
+    padding: 8px 6px 7px;
+    background: linear-gradient(160deg, rgba(80,40,8,0.85), rgba(40,20,4,0.92));
+    border: 1px solid rgba(255,209,102,0.55);
+    box-shadow:
+      0 6px 16px rgba(0,0,0,0.55),
+      0 0 16px rgba(255,180,60,0.30),
+      inset 0 1px 0 rgba(255,230,160,0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center;
+    animation: dr-float 3.6s ease-in-out infinite;
+  }
+  @keyframes dr-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  .daily-reward .dr-ico {
+    font-size: 22px;
+    filter: drop-shadow(0 0 6px rgba(255,200,80,0.7));
+    line-height: 1;
+  }
+  .daily-reward .dr-title {
+    margin-top: 4px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background: linear-gradient(180deg, #fff5cc, #ffca55);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+  .daily-reward .dr-amt {
+    font-size: 10px;
+    color: rgba(255,220,150,0.85);
+    margin-top: 1px;
+    font-weight: 600;
+  }
+  .daily-reward .dr-btn {
+    margin-top: 6px;
+    border: none;
+    background: linear-gradient(135deg, #ffd166, #ff9500);
+    color: #4a2200;
+    font-weight: 800;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.4);
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .daily-reward .dr-btn:active { transform: scale(0.94); }
+  .daily-reward .dr-btn:disabled {
+    background: rgba(255,255,255,0.10);
+    color: rgba(255,255,255,0.4);
+    box-shadow: none;
+    cursor: default;
+  }
+
+  /* ===========================
+     v5: Hot rooms recommendation (horizontal snap list)
+     =========================== */
+  .hot-rooms-wrap {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 168px;
+    z-index: 28;
+    padding: 0 12px;
+    pointer-events: none;
+  }
+  .hot-rooms-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: 0 4px 6px;
+    pointer-events: auto;
+  }
+  .hot-rooms-head .hr-title {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    background: linear-gradient(180deg, #fff3c7, #c89933);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+  .hot-rooms-head .hr-more {
+    font-size: 10px;
+    color: rgba(255,220,150,0.6);
+    letter-spacing: 0.5px;
+  }
+  .hot-rooms {
+    display: flex; gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 4px 8px;
+    pointer-events: auto;
+    scrollbar-width: none;
+  }
+  .hot-rooms::-webkit-scrollbar { display: none; }
+  .hot-room {
+    flex: 0 0 200px;
+    scroll-snap-align: start;
+    position: relative;
+    border-radius: 12px;
+    padding: 8px 10px 8px 8px;
+    background: linear-gradient(135deg, rgba(50,30,70,0.82), rgba(20,12,32,0.88));
+    border: 1px solid rgba(255,209,102,0.20);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer;
+  }
+  .hot-room:active { transform: scale(0.98); }
+  .hot-room .hr-tag {
+    position: absolute;
+    top: -7px; left: 8px;
+    background: linear-gradient(135deg, #ff6b3a, #c8203a);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 999px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(200,32,58,0.5);
+  }
+  .hot-room.tag-diamond .hr-tag { background: linear-gradient(135deg, #5ac8fa, #007aff); }
+  .hot-room.tag-target .hr-tag { background: linear-gradient(135deg, #34c759, #1a8a3a); }
+  .hot-room .hr-av {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #5856d6, #007aff);
+    font-size: 18px;
+    flex-shrink: 0;
+    border: 1.5px solid rgba(255,255,255,0.18);
+  }
+  .hot-room .hr-av.vip-gold { border-color: #ffd166; box-shadow: 0 0 6px rgba(255,180,60,0.6); }
+  .hot-room .hr-av.vip-silver { border-color: #d0d0d0; box-shadow: 0 0 5px rgba(200,200,200,0.4); }
+  .hot-room .hr-av.vip-diamond { border-color: #5ac8fa; box-shadow: 0 0 6px rgba(90,200,250,0.6); }
+  .hot-room .hr-info { flex: 1; min-width: 0; }
+  .hot-room .hr-name {
+    font-size: 12px; font-weight: 700;
+    color: #fff;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .hot-room .hr-meta {
+    font-size: 9.5px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .hot-room .hr-join {
+    background: linear-gradient(135deg, #ffd166, #ff9500);
+    color: #4a2200;
+    border: none;
+    font-weight: 800;
+    font-size: 10px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    flex-shrink: 0;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .hot-room .hr-join:active { transform: scale(0.94); }
+
+  /* ===========================
+     v5: Join page segmented tabs + grouped rooms
+     =========================== */
+  .join-segmented {
+    display: flex;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 999px;
+    padding: 3px;
+    margin: 4px 0 14px;
+    position: relative;
+  }
+  .join-segmented .seg {
+    flex: 1;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 7px 0;
+    border-radius: 999px;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    transition: color 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .join-segmented .seg.active {
+    background: linear-gradient(135deg, #f5d985, #c89933);
+    color: #2a1a08;
+    box-shadow: 0 2px 8px rgba(255,180,60,0.35), inset 0 1px 0 rgba(255,255,255,0.5);
+  }
+
+  /* Avatar VIP ring for room cards */
+  .room-card .creator-av.avatar {
+    border-width: 2px;
+  }
+  .room-card .creator-av.vip-gold { border-color: #ffd166; box-shadow: 0 0 6px rgba(255,180,60,0.55); }
+  .room-card .creator-av.vip-silver { border-color: #d0d0d0; box-shadow: 0 0 5px rgba(200,200,200,0.40); }
+  .room-card .creator-av.vip-diamond { border-color: #5ac8fa; box-shadow: 0 0 6px rgba(90,200,250,0.55); }
+
+  .room-card .rname .table-pill {
+    background: rgba(255,209,102,0.16);
+    border: 1px solid rgba(255,209,102,0.35);
+    color: #ffd166;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 999px;
+    letter-spacing: 0.3px;
+  }
+  .join-group-empty {
+    text-align: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+    padding: 30px 0;
   }
 
   /* ===========================
@@ -1333,6 +1635,13 @@
   html:not([data-screen="lobby"]) #lobbyPage,
   html:not([data-screen="lobby"]) .arc-btns,
   html:not([data-screen="lobby"]) .arc-btn,
+  html:not([data-screen="lobby"]) .entry-cards,
+  html:not([data-screen="lobby"]) .entry-card,
+  html:not([data-screen="lobby"]) .daily-reward,
+  html:not([data-screen="lobby"]) .hot-rooms-wrap,
+  html:not([data-screen="lobby"]) .stage-halo,
+  html:not([data-screen="lobby"]) .stage-cone,
+  html:not([data-screen="lobby"]) .bg-dust,
   html:not([data-screen="lobby"]) .dealer-wrap,
   html:not([data-screen="lobby"]) .dealer-bubble,
   html:not([data-screen="lobby"]) .lobby-table-wrap,
@@ -1382,11 +1691,25 @@
         <div class="bokeh b-violet bk7"></div>
       </div>
 
-      <!-- Brand LOGO at top center -->
+      <!-- v5: spotlight cone + stage halo + drifting gold dust -->
+      <div class="stage-cone"></div>
+      <div class="stage-halo"></div>
+      <div class="bg-dust">
+        <div class="dust d1"></div>
+        <div class="dust d2"></div>
+        <div class="dust d3"></div>
+        <div class="dust d4"></div>
+        <div class="dust d5"></div>
+        <div class="dust d6"></div>
+      </div>
+
+      <!-- Brand LOGO at top center (v5 dual-line) -->
       <div class="lobby-greet">
         <div class="h"><span class="suit-ico">♠</span>TEXAS HOLD'EM</div>
-        <div class="s">ROYAL · CASINO</div>
-        <div class="gold-line"></div>
+        <div class="diamond-row">
+          <span class="ln"></span><span class="dm"></span><span class="ln"></span>
+        </div>
+        <div class="h2">VIP CLUB · PREMIUM TABLES</div>
       </div>
 
       <!-- Coin counter (top right) -->
@@ -1462,31 +1785,73 @@
         </div>
       </div>
 
-      <!-- 4 arc buttons -->
-      <div class="arc-btns" id="arcBtns">
-        <button class="arc-btn b1" data-page="profilePage" data-angle="-38">
-          <div class="arc-inner">
-            <div class="icon">👤</div>
-          </div>
-          <div class="lbl">个人</div>
+      <!-- v5: Daily reward floating card -->
+      <div class="daily-reward" id="dailyReward">
+        <div class="dr-ico">🎁</div>
+        <div class="dr-title">今日奖励</div>
+        <div class="dr-amt">+$888</div>
+        <button class="dr-btn" id="dailyRewardBtn">领取</button>
+      </div>
+
+      <!-- v5: Hot rooms recommendation strip -->
+      <div class="hot-rooms-wrap">
+        <div class="hot-rooms-head">
+          <span class="hr-title">🔥 热门牌局</span>
+          <span class="hr-more">滑动查看更多 ›</span>
+        </div>
+        <div class="hot-rooms" id="hotRoomsList"></div>
+      </div>
+
+      <!-- v5: 2x2 grid card-style entry buttons (replaces arc buttons) -->
+      <div class="entry-cards" id="entryCards">
+        <button class="entry-card" data-page="profilePage">
+          <span class="ec-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c89933" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 21c0-4.42 3.58-8 8-8s8 3.58 8 8"/>
+            </svg>
+          </span>
+          <span class="ec-text">
+            <span class="ec-title">个人中心</span>
+            <span class="ec-sub">查看资产与战绩</span>
+          </span>
         </button>
-        <button class="arc-btn b2" data-page="topupPage" data-angle="-13">
-          <div class="arc-inner">
-            <div class="icon">💎</div>
-          </div>
-          <div class="lbl">充值</div>
+        <button class="entry-card" data-page="topupPage">
+          <span class="ec-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c89933" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L4 9l8 13 8-13z"/>
+              <path d="M4 9h16"/>
+              <path d="M12 2l-4 7 4 13 4-13z"/>
+            </svg>
+          </span>
+          <span class="ec-text">
+            <span class="ec-title">充值中心</span>
+            <span class="ec-sub">金币 · 钻石 · 礼包</span>
+          </span>
         </button>
-        <button class="arc-btn b3" data-page="createPage" data-angle="13">
-          <div class="arc-inner">
-            <div class="icon">🎲</div>
-          </div>
-          <div class="lbl">创建</div>
+        <button class="entry-card" data-page="createPage">
+          <span class="ec-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c89933" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="11" height="15" rx="2" transform="rotate(-8 8 11)"/>
+              <rect x="9" y="4" width="11" height="15" rx="2" transform="rotate(8 14 11)"/>
+              <path d="M19 19v6M16 22h6"/>
+            </svg>
+          </span>
+          <span class="ec-text">
+            <span class="ec-title">创建房间</span>
+            <span class="ec-sub">自定义盲注与桌型</span>
+          </span>
         </button>
-        <button class="arc-btn b4" data-page="joinPage" data-angle="38">
-          <div class="arc-inner">
-            <div class="icon">🔍</div>
-          </div>
-          <div class="lbl">加入牌局</div>
+        <button class="entry-card cta" data-page="joinPage">
+          <span class="ec-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2a1a08" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="#2a1a08" fill-opacity="0.15"/>
+            </svg>
+          </span>
+          <span class="ec-text">
+            <span class="ec-title">快速加入</span>
+            <span class="ec-sub">立即开战</span>
+          </span>
         </button>
       </div>
     </div>
@@ -1643,6 +2008,10 @@
       <div class="ph-title">加入牌局</div>
     </div>
     <div class="page-body">
+      <div class="join-segmented" id="joinSegmented">
+        <div class="seg active" data-tier="featured">精选牌局</div>
+        <div class="seg" data-tier="casual">轻松入门</div>
+      </div>
       <div id="joinRoomList"></div>
     </div>
   </div>
@@ -2732,18 +3101,22 @@ function refreshProfileVip() {
 
 /* ---------------- Room presets with creator info ---------------- */
 const ROOM_PRESETS = [
-  { id: 'r1', name: '新手友好局',  sb: 10, bb: 20,  joined: 2, max: 4, minBuyin: 200,  ico: '🌱',
+  { id: 'r1', name: '新手友好局',  sb: 10, bb: 20,  joined: 2, max: 4, minBuyin: 200,  ico: '🌱', tier: 'casual',
     creator: { name: '小美',     avatar: '💁‍♀️', vipTier: 'gold'    } },
-  { id: 'r2', name: '深夜咖啡局',  sb: 25, bb: 50,  joined: 3, max: 6, minBuyin: 500,  ico: '☕',
+  { id: 'r2', name: '深夜咖啡局',  sb: 25, bb: 50,  joined: 3, max: 6, minBuyin: 500,  ico: '☕', tier: 'casual',
     creator: { name: '老王',     avatar: '👨‍🦳', vipTier: 'silver'  } },
-  { id: 'r3', name: '高额竞技场',  sb: 50, bb: 100, joined: 4, max: 8, minBuyin: 1000, ico: '🔥',
+  { id: 'r3', name: '高额竞技场',  sb: 50, bb: 100, joined: 4, max: 8, minBuyin: 1000, ico: '🔥', tier: 'featured',
     creator: { name: 'Vivian',   avatar: '👩‍🎤', vipTier: 'diamond' } },
-  { id: 'r4', name: '老司机俱乐部', sb: 25, bb: 50,  joined: 5, max: 6, minBuyin: 500,  ico: '🎩',
+  { id: 'r4', name: '老司机俱乐部', sb: 25, bb: 50,  joined: 5, max: 6, minBuyin: 500,  ico: '🎩', tier: 'featured',
     creator: { name: '阿杰',     avatar: '🧑‍✈️', vipTier: 'gold'    } },
-  { id: 'r5', name: '周五夜局',    sb: 10, bb: 20,  joined: 1, max: 4, minBuyin: 200,  ico: '🍻',
+  { id: 'r5', name: '周五夜局',    sb: 10, bb: 20,  joined: 1, max: 4, minBuyin: 200,  ico: '🍻', tier: 'casual',
     creator: { name: 'Tina',     avatar: '👩‍🚀', vipTier: 'silver'  } },
-  { id: 'r6', name: '钻石厅',      sb: 50, bb: 100, joined: 6, max: 8, minBuyin: 1000, ico: '💎',
+  { id: 'r6', name: '钻石厅',      sb: 50, bb: 100, joined: 6, max: 8, minBuyin: 1000, ico: '💎', tier: 'featured',
     creator: { name: '老钱',     avatar: '🤵',   vipTier: 'diamond' } },
+  { id: 'r7', name: '新手训练营',  sb: 5,  bb: 10,  joined: 2, max: 6, minBuyin: 100,  ico: '🎯', tier: 'casual',
+    creator: { name: '教练大刘', avatar: '🧙',   vipTier: 'silver'  } },
+  { id: 'r8', name: 'VIP贵宾厅',   sb: 100, bb: 200, joined: 5, max: 8, minBuyin: 2000, ico: '👑', tier: 'featured',
+    creator: { name: 'Mr.K',     avatar: '🤵',   vipTier: 'diamond' } },
 ];
 
 /* ---------------- Page stack ---------------- */
@@ -2803,7 +3176,7 @@ document.addEventListener('click', e => {
   if (t) closePage();
 });
 
-document.querySelectorAll('.arc-btn[data-page]').forEach(btn => {
+document.querySelectorAll('.entry-card[data-page]').forEach(btn => {
   btn.addEventListener('click', () => {
     openPage(btn.dataset.page);
   });
@@ -2837,8 +3210,9 @@ let dealerTimer = null;
 function renderLobby() {
   refreshProfileVip();
   $('lobbyCoinVal').textContent = profile.chips;
-  // Position arc buttons in semicircle
-  positionArcButtons();
+  // v5: render hot rooms strip + daily reward state
+  renderHotRooms();
+  renderDailyReward();
   // Show first bubble immediately
   cycleDealerBubble(true);
   // (re)start timer
@@ -2864,23 +3238,92 @@ function cycleDealerBubble(showImmediate) {
   }, 320);
 }
 
-function positionArcButtons() {
-  // Place 4 buttons along bottom arc (smile shape).
-  // Angles in degrees from vertical: -38, -13, 13, 38
-  // Center distance between adjacent buttons: 2*R*sin((38-13)/2 deg) = 2*190*sin(12.5deg) ≈ 82px (>= 80px target)
-  const R = 190;          // radius (px)
-  const baseBottom = 38;  // bottom offset for the lowest point of arc
-  const btnHalf = 34;     // half of button width (68/2)
-  document.querySelectorAll('.arc-btn').forEach(btn => {
-    const angDeg = +btn.dataset.angle;
-    const ang = angDeg * Math.PI / 180;
-    const x = R * Math.sin(ang);
-    const y = R - R * Math.cos(ang); // edges higher than middle => smile arc
-    btn.style.left = `calc(50% + ${x}px - ${btnHalf}px)`;
-    btn.style.bottom = (baseBottom + y) + 'px';
-    btn.style.transform = ''; // no rotation: button body stays upright
+/* ---------------- v5: Hot rooms strip on lobby ---------------- */
+function renderHotRooms() {
+  const wrap = $('hotRoomsList');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  // Pick 4 hottest (featured tier preferred, then by joined ratio)
+  const sorted = ROOM_PRESETS.slice().sort((a, b) => {
+    const tierW = (t) => t === 'featured' ? 1 : 0;
+    if (tierW(b.tier) !== tierW(a.tier)) return tierW(b.tier) - tierW(a.tier);
+    return (b.joined / b.max) - (a.joined / a.max);
+  });
+  const tags = [
+    { txt: '🔥 火热',  cls: '' },
+    { txt: '💎 高额',  cls: 'tag-diamond' },
+    { txt: '🎯 推荐',  cls: 'tag-target' },
+    { txt: '🔥 火热',  cls: '' },
+  ];
+  sorted.slice(0, 4).forEach((r, i) => {
+    const tag = tags[i] || tags[0];
+    const vipCls = 'vip-' + r.creator.vipTier;
+    const el = document.createElement('div');
+    el.className = 'hot-room ' + tag.cls;
+    el.innerHTML = `
+      <span class="hr-tag">${tag.txt}</span>
+      <div class="hr-av ${vipCls}">${r.creator.avatar}</div>
+      <div class="hr-info">
+        <div class="hr-name">${r.name}</div>
+        <div class="hr-meta">${r.creator.name} · $${r.sb}/$${r.bb} · ${r.joined}/${r.max}</div>
+      </div>
+      <button class="hr-join" type="button">加入</button>
+    `;
+    el.querySelector('.hr-join').addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      joinRoom(r);
+    });
+    el.addEventListener('click', () => joinRoom(r));
+    wrap.appendChild(el);
   });
 }
+
+function joinRoom(r) {
+  const full = r.joined >= r.max;
+  if (full) { showToast('房间已满'); return; }
+  if (profile.chips < r.minBuyin) {
+    showToast('筹码不足，请先充值');
+    return;
+  }
+  enterTable(r.name, r.sb, r.bb, r.max, r.creator);
+}
+
+/* ---------------- v5: Daily reward ---------------- */
+function todayKey() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return 'daily_reward_' + y + '-' + m + '-' + day;
+}
+function isDailyClaimed() {
+  try { return localStorage.getItem(todayKey()) === '1'; } catch (e) { return false; }
+}
+function renderDailyReward() {
+  const btn = $('dailyRewardBtn');
+  if (!btn) return;
+  if (isDailyClaimed()) {
+    btn.textContent = '✓ 已领';
+    btn.disabled = true;
+  } else {
+    btn.textContent = '领取';
+    btn.disabled = false;
+  }
+}
+(function wireDailyReward() {
+  const btn = document.getElementById('dailyRewardBtn');
+  if (!btn) return;
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (isDailyClaimed()) return;
+    profile.chips += 888;
+    saveProfile();
+    try { localStorage.setItem(todayKey(), '1'); } catch (er) {}
+    renderDailyReward();
+    $('lobbyCoinVal').textContent = profile.chips;
+    showToast('+$888 已到账', 1600);
+  });
+})();
 
 /* ---------------- Profile page ---------------- */
 function renderProfilePage() {
@@ -2987,19 +3430,37 @@ $('createConfirmBtn').addEventListener('click', () => {
 });
 
 /* ---------------- Join page ---------------- */
+let joinActiveTier = 'featured';
 function renderJoinPage() {
+  // Sync segmented active state
+  document.querySelectorAll('#joinSegmented .seg').forEach(s => {
+    s.classList.toggle('active', s.dataset.tier === joinActiveTier);
+  });
   const wrap = $('joinRoomList');
   wrap.innerHTML = '';
-  for (const r of ROOM_PRESETS) {
+  const list = ROOM_PRESETS.filter(r => r.tier === joinActiveTier);
+  if (list.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'join-group-empty';
+    empty.textContent = '该分组暂无房间，敬请期待';
+    wrap.appendChild(empty);
+    return;
+  }
+  const tableLabel = (seats) => seats === 4 ? '4人桌' : (seats === 6 ? '6人桌' : '8人桌');
+  for (const r of list) {
     const full = r.joined >= r.max;
     const vipLabel = VIP_LABELS[r.creator.vipTier];
     const vipCls = r.creator.vipTier === 'silver' ? '' : r.creator.vipTier;
+    const ringCls = 'vip-' + r.creator.vipTier;
     const el = document.createElement('div');
     el.className = 'room-card';
     el.innerHTML = `
-      <div class="avatar md creator-av">${r.creator.avatar}</div>
+      <div class="avatar md creator-av ${ringCls}">${r.creator.avatar}</div>
       <div class="rmid">
-        <div class="rname">${r.name}</div>
+        <div class="rname">
+          <span>${r.name}</span>
+          <span class="table-pill">${tableLabel(r.max)}</span>
+        </div>
         <div class="rby">
           <span>${r.creator.name}</span>
           <span class="vip-badge ${vipCls}">${vipLabel}</span>
@@ -3026,6 +3487,18 @@ function renderJoinPage() {
     wrap.appendChild(el);
   }
 }
+(function wireJoinSegmented() {
+  const seg = document.getElementById('joinSegmented');
+  if (!seg) return;
+  seg.addEventListener('click', (e) => {
+    const t = e.target.closest('.seg');
+    if (!t) return;
+    const tier = t.dataset.tier;
+    if (!tier || tier === joinActiveTier) return;
+    joinActiveTier = tier;
+    renderJoinPage();
+  });
+})();
 
 /* ---------------- Table enter/leave ---------------- */
 function enterTable(roomName, sb, bb, seats, creator) {
